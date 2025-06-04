@@ -15,19 +15,20 @@ const Header = async () => {
    <div className="fixed top-0 w-full bg-[#f5f5f5] z-50 border-b border-gray-200">
 
       <nav className="container mx-auto flex items-center justify-between px-4 py-4">
-       <Link href="/" className="flex items-center gap-2">
-      <Image
-        src="/logo1.png"
-        alt="SmartSpend logo"
-        height={60}
-        width={60}
-        className="h-12 w-12 object-contain"
-      />
-      <span className="text-2xl font-bold">
-        <span className="text-gray-700">$mart</span>
-        <span className="text-orange-500">Spend</span>
-      </span>
-    </Link>
+       <Link href="/" className="flex items-center gap-1">
+  <Image
+    src="/logo1.png"
+    alt="SmartSpend logo"
+    height={60}
+    width={60}
+    className="h-12 w-12 object-contain"
+  />
+  <span className="text-2xl font-bold hidden sm:inline">
+    <span className="text-gray-700">$mart</span>
+    <span className="text-orange-500">Spend</span>
+  </span>
+</Link>
+
        <div className="flex items-center space-x-6 ">
         
         <SignedIn>
