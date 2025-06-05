@@ -9,7 +9,8 @@ import Footer from "@/components/footer";
 
 export default function Home() {
   return (
-  <div  className="mt-40">
+  <div className="mt-20 md:mt-40">
+
 <HeroSection/>
  
 
@@ -50,13 +51,15 @@ export default function Home() {
   <h1 className="text-3xl font-bold text-center mb-12">Everything you need to manage your finances</h1>
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
     {featuresData.map((feature, index) => (
-      <Card key={index} className="p-6 ">
+      <Card key={index} className="p-4">
+
   <CardContent className="space-y-4 pt-4">
    {feature.icon}
    <h3 className="text-xl font-semibold">{feature.title}</h3>
    <p className="text-gray-600">{feature.description}</p>
   </CardContent>
       </Card>
+      
 
     ))}
   </div>
@@ -87,19 +90,27 @@ export default function Home() {
   <h1 className="text-3xl font-bold text-center mb-12">What Our Users Say</h1>
   <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
     {testimonialsData.map((testimonial, index) => (
-      <Card key={index} className="p-6 ">
-        <CardContent className="space-y-4 pt-4">
-          <div className="flex items-center mb-4">
+      // <Card key={index} className="p-4 md:p-6">
+      //   <CardContent className="space-y-4 pt-4">
+      //     <div className="flex items-center mb-4">
        
 
-           <div className="ml-4">
-            <div className="font-semibold">{testimonial.name}</div>
-            <div className="text-sm text-gray-600">{testimonial.role}</div>
-           </div>
-          </div>
-          <p>{testimonial.quote}</p>
-        </CardContent>
-      </Card>
+      //      <div className="ml-4">
+      //       <div className="font-semibold">{testimonial.name}</div>
+      //       <div className="text-sm text-gray-600">{testimonial.role}</div>
+      //      </div>
+      //     </div>
+      //     <p>{testimonial.quote}</p>
+      //   </CardContent>
+      // </Card>
+      <Card key={index} className="p-4 md:p-6">
+  <CardContent className="space-y-4 pt-2 text-center">
+    <div className="font-semibold text-lg">{testimonial.name}</div>
+    <div className="text-sm text-gray-600">{testimonial.role}</div>
+    <p className="text-gray-700 italic">“{testimonial.quote}”</p>
+  </CardContent>
+</Card>
+
 
     ))}
   </div>

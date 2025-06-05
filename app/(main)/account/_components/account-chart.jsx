@@ -86,7 +86,7 @@ const AccountChart = ({transactions}) => {
   </CardHeader>
   <CardContent>
 
-       <div className="flex justify-around mb-6 text-sm">
+       {/* <div className="flex justify-around mb-6 text-sm">
           <div className="text-center">
             <p className="text-muted-foreground">Total Income</p>
             <p className="text-lg font-bold text-green-500">
@@ -111,7 +111,30 @@ const AccountChart = ({transactions}) => {
               ${(totals.income - totals.expense).toFixed(2)}
             </p>
           </div>
-        </div>
+        </div> */}
+        <div className="flex flex-col sm:flex-row sm:justify-around mb-6 text-sm gap-4 sm:gap-0 items-center">
+  <div className="text-center max-w-xs w-full">
+    <p className="text-muted-foreground text-sm sm:text-base">Total Income</p>
+    <p className="text-lg font-bold text-green-500">${totals.income.toFixed(2)}</p>
+  </div>
+  <div className="text-center max-w-xs w-full">
+    <p className="text-muted-foreground text-sm sm:text-base">Total Expenses</p>
+    <p className="text-lg font-bold text-red-500">${totals.expense.toFixed(2)}</p>
+  </div>
+  <div className="text-center max-w-xs w-full">
+    <p className="text-muted-foreground text-sm sm:text-base">Net</p>
+    <p
+      className={`text-lg font-bold ${
+        totals.income - totals.expense >= 0
+          ? "text-green-500"
+          : "text-red-500"
+      }`}
+    >
+      ${(totals.income - totals.expense).toFixed(2)}
+    </p>
+  </div>
+</div>
+
     <div className="h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart

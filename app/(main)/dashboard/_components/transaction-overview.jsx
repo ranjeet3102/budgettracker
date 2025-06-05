@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useMediaQuery } from "react-responsive";
 import {
   PieChart,
   Pie,
@@ -50,6 +51,9 @@ const DashboardOverview = ({ accounts, transactions }) => {
   const recentTransactions = accountTransactions
     .sort((a, b) => new Date(b.date) - new Date(a.date))
     .slice(0, 5);
+
+    // for mobile view
+    const isMobile = useMediaQuery({ maxWidth: 768 });
 
   // Calculate expense breakdown for current month
   const currentDate = new Date();
@@ -163,7 +167,7 @@ const DashboardOverview = ({ accounts, transactions }) => {
           ) : (
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
+                {/* <PieChart>
                   <Pie
                     data={pieChartData}
                     cx="50%"
@@ -189,7 +193,47 @@ const DashboardOverview = ({ accounts, transactions }) => {
                     }}
                   />
                   <Legend />
-                </PieChart>
+                </PieChart> */}
+                <PieChart>
+  <Pie
+    data={pieChartData}
+    cx="50%"
+    cy="50%"
+    outerRadius={isMobile ? 100 : 80}
+    fill="#8884d8"
+    dataKey="value"
+    labelLine={!isMobile}
+    label={({ name, value, percent }) =>
+      isMobile
+        ? `${(percent * 100).toFixed(1)}%`
+        : `${name}: $${value.toFixed(2)}`
+    }
+  >
+    {pieChartData.map((entry, index) => (
+      <Cell
+        key={`cell-${index}`}
+        fill={COLORS[index % COLORS.length]}
+      />
+    ))}
+  </Pie>
+  <Tooltip
+    formatter={(value) => `$${value.toFixed(2)}`}
+    contentStyle={{
+      backgroundColor: "hsl(var(--popover))",
+      border: "1px solid hsl(var(--border))",
+      borderRadius: "var(--radius)",
+    }}
+  />
+  <Legend
+    layout="horizontal"
+    verticalAlign="bottom"
+    align="center"
+    wrapperStyle={{
+      fontSize: isMobile ? "12px" : "14px",
+      textAlign: "center",
+    }}
+  />
+</PieChart>
               </ResponsiveContainer>
             </div>
           )}
