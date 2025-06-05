@@ -46,6 +46,9 @@ const TransactionTable = ({transactions}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
 
+  //for mobile view recurring 
+  const [expandedRowId, setExpandedRowId] = useState(null);
+const isMobile = typeof window !== "undefined" && window.innerWidth < 640
 
 
 
@@ -318,7 +321,7 @@ const handlePageChange = (newPage) => {
       }}>
         {transaction.type === "EXPENSE" ? "-" : "+"}$
         {transaction.amount.toFixed(2)}</TableCell>
-        
+{/*         
         <TableCell>{transaction.isRecurring ? (
 <TooltipProvider>
   <Tooltip>
@@ -342,7 +345,54 @@ const handlePageChange = (newPage) => {
           <Badge variant="outline" className="gap-1">
             <Clock className="h-3 w-3"/>one-time</Badge>
         )}</TableCell>
-      
+       */}
+        <TableCell>
+  {transaction.isRecurring ? (
+    <>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger
+            onClick={() =>
+              isMobile
+                ? setExpandedRowId(
+                    expandedRowId === transaction.id ? null : transaction.id
+                  )
+                : null
+            }
+          >
+            <Badge
+              variant="outline"
+              className="gap-1 bg-purple-100 text-purple-700 hover:bg-purple-200 cursor-pointer"
+            >
+              <RefreshCw className="h-3 w-3" />
+              {RECURRING_INTERVALS[transaction.recurringInterval]}
+            </Badge>
+          </TooltipTrigger>
+          <TooltipContent>
+            <div className="text-sm">
+              <div className="font-medium">Next Date:</div>
+              <div>
+                {format(new Date(transaction.nextRecurringDate), "PP")}
+              </div>
+            </div>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+
+      {/* Show below badge for mobile */}
+      {isMobile && expandedRowId === transaction.id && (
+        <div className="text-xs text-muted-foreground mt-1">
+          Next Date: {format(new Date(transaction.nextRecurringDate), "PP")}
+        </div>
+      )}
+    </>
+  ) : (
+    <Badge variant="outline" className="gap-1">
+      <Clock className="h-3 w-3" />
+      One-time
+    </Badge>
+  )}
+</TableCell>
 
       <TableCell>
         <DropdownMenu>
