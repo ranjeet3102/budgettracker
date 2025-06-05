@@ -17,6 +17,7 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useMemo, useState } from 'react'
 import { BarLoader } from 'react-spinners';
 import { toast } from 'sonner';
+import RecurringBadge from './mobile-hover';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -46,9 +47,6 @@ const TransactionTable = ({transactions}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
 
-  //for mobile view recurring 
-  const [expandedRowId, setExpandedRowId] = useState(null);
-const isMobile = typeof window !== "undefined" && window.innerWidth < 640
 
 
 
@@ -321,8 +319,8 @@ const handlePageChange = (newPage) => {
       }}>
         {transaction.type === "EXPENSE" ? "-" : "+"}$
         {transaction.amount.toFixed(2)}</TableCell>
-{/*         
-        <TableCell>{transaction.isRecurring ? (
+        
+        {/* <TableCell>{transaction.isRecurring ? (
 <TooltipProvider>
   <Tooltip>
     <TooltipTrigger> <Badge variant="outline"
@@ -344,44 +342,11 @@ const handlePageChange = (newPage) => {
         ):(
           <Badge variant="outline" className="gap-1">
             <Clock className="h-3 w-3"/>one-time</Badge>
-        )}</TableCell>
-       */}
-        {transaction.isRecurring ? (
-  transaction.recurringInterval && (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger>
-          <Badge
-            variant="outline"
-            className="gap-1 bg-purple-100 text-purple-700 hover:bg-purple-200"
-          >
-            <RefreshCw className="h-3 w-3" />
-            {RECURRING_INTERVALS[transaction.recurringInterval] || "Recurring"}
-          </Badge>
-        </TooltipTrigger>
-        {transaction.nextRecurringDate && (
-          <TooltipContent>
-            <div className="text-sm">
-              <div className="fond-medium">Next Date:</div>
-              <div>
-                {format(
-                  new Date(transaction.nextRecurringDate),
-                  "PP"
-                )}
-              </div>
-            </div>
-          </TooltipContent>
-        )}
-      </Tooltip>
-    </TooltipProvider>
-  )
-) : (
-  <Badge variant="outline" className="gap-1">
-    <Clock className="h-3 w-3" />
-    one-time
-  </Badge>
-)}
-
+        )}</TableCell> */}
+        <TableCell>
+  <RecurringBadge transaction={transaction} />
+</TableCell>
+      
 
       <TableCell>
         <DropdownMenu>
