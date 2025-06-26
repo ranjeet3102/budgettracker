@@ -199,7 +199,7 @@ const DashboardOverview = ({ accounts, transactions }) => {
     data={pieChartData}
     cx="50%"
     cy="50%"
-    outerRadius={isMobile ? 100 : 80}
+    outerRadius={isMobile ? 80 : 60}
     fill="#8884d8"
     dataKey="value"
     labelLine={!isMobile}
