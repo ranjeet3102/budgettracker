@@ -1,64 +1,64 @@
-// app/api/transaction/sms/route.js
-
-import { db } from '@/lib/prisma'; // Adjust if your prisma instance is elsewhere
+import { db } from '@/lib/prisma';
 
 export async function POST(req) {
   try {
-    const body = await req.json();
+    console.log('👉 /api/transaction/sms called');
 
-    if (!body?.message) {
+    // ----- raw body so you never crash on malformed JSON
+    const bodyText = await req.text();
+    console.log('Raw body:', bodyText);
+
+    let body;
+    try {
+      body = JSON.parse(bodyText || '{}');
+    } catch {
+      return new Response(
+        JSON.stringify({ error: 'Body is not valid JSON' }),
+        { status: 400 }
+      );
+    }
+
+    if (!body.message) {
       return new Response(JSON.stringify({ error: 'Missing message field' }), { status: 400 });
     }
 
-    const message = body.message;
-
-    // Use your actual user ID logic if logged in, hardcoded for now
     const userId = 'e0cd0be5-1665-4eda-9554-68e2a9bed5d8';
 
-    // 🟡 Fetch the default account for this user
+    // default account
     const defaultAccount = await db.account.findFirst({
-      where: {
-        userId,
-        isDefault: true,
-      },
+      where: { userId, isDefault: true },
     });
+    console.log('Default account:', defaultAccount);
 
     if (!defaultAccount) {
-      console.error('⚠️ No default account found for user:', userId);
-      return new Response(JSON.stringify({ error: 'No default account found' }), { status: 404 });
+      return new Response(JSON.stringify({ error: 'No default account' }), { status: 404 });
     }
 
-    // 🟡 Try to extract amount using regex
-    const amountMatch = message.match(/(?:Rs\.?|INR)?\s?([\d,]+\.\d{2})/i);
+    // amount
+    const amountMatch = body.message.match(/(\d[\d,]*\.?\d{0,2})/);
     const amount = amountMatch ? parseFloat(amountMatch[1].replace(/,/g, '')) : 0;
 
-    if (isNaN(amount) || amount === 0) {
-      console.warn('⚠️ Could not extract amount from message:', message);
-    }
-
-    // 🟢 Save transaction to DB
     const transaction = await db.transaction.create({
       data: {
         userId,
         accountId: defaultAccount.id,
         amount,
-        description: message,
+        description: body.message,
         type: 'expense',
         source: 'sms',
       },
     });
 
-    console.log('✅ Transaction saved:', transaction);
+    console.log('✅ Saved tx:', transaction);
 
-    return Response.json({
-      success: true,
-      accountId: defaultAccount.id,
-      transactionId: transaction.id,
-      amount,
-      message,
-    });
+    return Response.json({ success: true, transactionId: transaction.id });
   } catch (err) {
-    console.error('❌ Error in POST /api/transaction/sms:', err);
-    return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500 });
+    console.error('❌ Handler error:', err);
+    return new Response(JSON.stringify({ error: 'Server error' }), { status: 500 });
   }
+}
+
+// (optional) quick GET health-check
+export async function GET() {
+  return Response.json({ ok: true, route: '/api/transaction/sms' });
 }
